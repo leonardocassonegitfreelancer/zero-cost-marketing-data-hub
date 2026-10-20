@@ -11,3 +11,4 @@ database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
 # Secrets are NOT stored here. Set each one with:
 #   wrangler secret put INGEST_SECRET_WEB_TRAFFIC
 #   wrangler secret put INGEST_SECRET_SEARCH
+#   wrangler secret put INGEST_SECRET_LEADS

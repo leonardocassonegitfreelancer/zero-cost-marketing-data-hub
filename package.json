@@ -1,7 +1,7 @@
 {
-  "name": "settled-day-analytics-pipeline",
-  "version": "0.1.0",
-  "description": "Collect one settled day of marketing analytics from Apps Script, ingest it through a Cloudflare Worker, store it idempotently in D1.",
+  "name": "zero-cost-marketing-data-hub",
+  "version": "0.2.0",
+  "description": "A marketing data hub on free tiers: GA4, Search Console and lead outcomes in one D1 database, joined by page, with the traps documented and tested.",
   "type": "module",
   "scripts": {
     "test": "node --test"

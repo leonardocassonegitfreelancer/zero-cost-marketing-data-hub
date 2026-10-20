@@ -7,7 +7,7 @@ const traffic = SOURCES.web_traffic_daily;
 
 const goodRow = {
   date: '2026-09-07',
-  landing_page: '/pricing',
+  page_path: '/pricing',
   channel: 'Organic Search',
   device: 'mobile',
   sessions: 12,
@@ -23,11 +23,11 @@ test('validateRows accepts a well-formed batch and returns new objects', () => {
 });
 
 test('missing key dimensions become empty strings, never null', () => {
-  const { landing_page, channel, device, ...rest } = goodRow;
+  const { page_path, channel, device, ...rest } = goodRow;
   const result = validateRows(traffic, [rest]);
   assert.equal(result.ok, true);
   assert.deepEqual(
-    [result.rows[0].landing_page, result.rows[0].channel, result.rows[0].device],
+    [result.rows[0].page_path, result.rows[0].channel, result.rows[0].device],
     ['', '', '']
   );
 });
@@ -56,10 +56,10 @@ test('rejects a non-numeric metric', () => {
 
 test('buildUpsertSql targets the composite key and updates only metrics', () => {
   const sql = buildUpsertSql(traffic);
-  assert.match(sql, /^INSERT INTO web_traffic_daily \(date, landing_page, channel, device, sessions, engaged_sessions, key_events\)/);
-  assert.match(sql, /ON CONFLICT\(date, landing_page, channel, device\) DO UPDATE SET/);
+  assert.match(sql, /^INSERT INTO web_traffic_daily \(date, page_path, channel, device, sessions, engaged_sessions, key_events\)/);
+  assert.match(sql, /ON CONFLICT\(date, page_path, channel, device\) DO UPDATE SET/);
   assert.match(sql, /sessions=excluded\.sessions/);
-  assert.doesNotMatch(sql, /landing_page=excluded/);
+  assert.doesNotMatch(sql, /page_path=excluded/);
 });
 
 test('toBindings follows the column order of the SQL', () => {

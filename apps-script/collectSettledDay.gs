@@ -23,7 +23,7 @@ var TIME_ZONE = 'Etc/UTC';
 // API dimension/metric names (camelCase) mapped to the snake_case columns
 // the Worker expects. One place to change when adding a breakdown.
 var DIMENSIONS = [
-  { api: 'landingPage', column: 'landing_page' },
+  { api: 'landingPage', column: 'page_path' },
   { api: 'sessionDefaultChannelGroup', column: 'channel' },
   { api: 'deviceCategory', column: 'device' }
 ];
@@ -104,14 +104,18 @@ function normalizeCompactDate_(value) {
 function postToWorker_(rows) {
   var secret = PropertiesService.getScriptProperties().getProperty('INGEST_SECRET_WEB_TRAFFIC');
   if (!secret) throw new Error('Missing script property INGEST_SECRET_WEB_TRAFFIC');
-  var response = UrlFetchApp.fetch(WORKER_URL, {
-    method: 'post',
-    contentType: 'application/json',
-    headers: { Authorization: 'Bearer ' + secret },
-    payload: JSON.stringify({ source: 'web_traffic_daily', rows: rows }),
-    muteHttpExceptions: true
-  });
-  if (response.getResponseCode() !== 200) {
-    throw new Error('Worker rejected the batch: ' + response.getResponseCode() + ' ' + response.getContentText());
+  // Batches of 500: the Worker caps a request at 1000 rows, and the Workers
+  // Free plan allows only 10 ms of CPU per request.
+  for (var start = 0; start < rows.length; start += 500) {
+    var response = UrlFetchApp.fetch(WORKER_URL, {
+      method: 'post',
+      contentType: 'application/json',
+      headers: { Authorization: 'Bearer ' + secret },
+      payload: JSON.stringify({ source: 'web_traffic_daily', rows: rows.slice(start, start + 500) }),
+      muteHttpExceptions: true
+    });
+    if (response.getResponseCode() !== 200) {
+      throw new Error('Worker rejected a batch: ' + response.getResponseCode() + ' ' + response.getContentText());
+    }
   }
 }

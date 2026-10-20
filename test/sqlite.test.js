@@ -17,7 +17,7 @@ const skip = DatabaseSync ? false : 'node:sqlite is not available on this Node v
 
 const source = SOURCES.web_traffic_daily;
 const row = {
-  date: '2026-09-07', landing_page: '/', channel: 'Direct', device: 'desktop',
+  date: '2026-09-07', page_path: '/', channel: 'Direct', device: 'desktop',
   sessions: 5, engaged_sessions: 4, key_events: 1,
 };
 

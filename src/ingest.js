@@ -1,6 +1,10 @@
 import { isIsoDate } from './dates.js';
+import { normalizePagePath } from './paths.js';
 
-export const MAX_ROWS_PER_REQUEST = 5000;
+// Kept small on purpose: the Workers Free plan allows 10 ms of CPU per
+// request, and validating a huge batch in one request is the easiest way to
+// exceed it. The collectors send batches of this size or smaller.
+export const MAX_ROWS_PER_REQUEST = 1000;
 
 // Validates and normalises a batch. Returns new objects; the input is never
 // modified.
@@ -36,7 +40,10 @@ function normaliseRow(source, row) {
   }
 
   const keys = Object.fromEntries(
-    source.keyColumns.map((column) => [column, String(row[column] ?? '')])
+    source.keyColumns.map((column) => {
+      const text = String(row[column] ?? '');
+      return [column, source.pathColumns.includes(column) ? normalizePagePath(text) : text];
+    })
   );
 
   const metrics = {};

@@ -32,7 +32,7 @@ function post(body, token) {
 }
 
 const row = {
-  date: '2026-09-07', landing_page: '/', channel: 'Direct', device: 'desktop',
+  date: '2026-09-07', page_path: '/', channel: 'Direct', device: 'desktop',
   sessions: 5, engaged_sessions: 4, key_events: 1,
 };
 

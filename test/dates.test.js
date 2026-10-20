@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { isIsoDate, normalizeCompactDate, settledDay } from '../src/dates.js';
+import { isIsoDate, normalizeCompactDate, settledDay, toLocalDate } from '../src/dates.js';
 
 test('normalizeCompactDate turns 20260825 into an ISO date', () => {
   assert.equal(normalizeCompactDate('20260825'), '2026-08-25');
@@ -24,4 +24,14 @@ test('isIsoDate rejects impossible and malformed dates', () => {
   assert.equal(isIsoDate('26-02-03'), false);
   assert.equal(isIsoDate(20260203), false);
   assert.equal(isIsoDate('2026-02-03'), true);
+});
+
+test('toLocalDate files a late-evening UTC instant under the local next day', () => {
+  assert.equal(toLocalDate('2026-09-01T23:30:00Z', 'Europe/Madrid'), '2026-09-02');
+  assert.equal(toLocalDate('2026-09-01T23:30:00Z', 'Etc/UTC'), '2026-09-01');
+});
+
+test('toLocalDate returns null for an unreadable timestamp', () => {
+  assert.equal(toLocalDate('not a date', 'Europe/Madrid'), null);
+  assert.equal(toLocalDate(undefined, 'Europe/Madrid'), null);
 });
