@@ -1,0 +1,10 @@
+{
+  "name": "settled-day-analytics-pipeline",
+  "version": "0.1.0",
+  "description": "Collect one settled day of marketing analytics from Apps Script, ingest it through a Cloudflare Worker, store it idempotently in D1.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "license": "MIT"
+}

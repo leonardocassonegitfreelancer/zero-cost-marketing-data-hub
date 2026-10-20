@@ -1,0 +1,13 @@
+# Copy to wrangler.toml and fill in your own values. Never commit the real file.
+name = "analytics-ingest"
+main = "src/worker.js"
+compatibility_date = "2025-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "analytics"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+# Secrets are NOT stored here. Set each one with:
+#   wrangler secret put INGEST_SECRET_WEB_TRAFFIC
+#   wrangler secret put INGEST_SECRET_SEARCH
